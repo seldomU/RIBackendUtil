@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using RelationsInspector.Extensions;
 
 namespace RelationsInspector.Backend
 {
 	public static class BackendUtil
-	{
+	{		
 		// pair collection entries with the default P value
 		public static IEnumerable<Tuple<T, P>> PairWithDefaultTag<T, P>(IEnumerable<T> collection)
 		{
@@ -47,8 +49,8 @@ namespace RelationsInspector.Backend
 			if (string.IsNullOrEmpty(path))
 				return null;
 
-			string fullPath = System.IO.Path.GetFullPath(path).Replace(@"\", @"/");
-			return System.IO.Path.GetDirectoryName(fullPath);
+			path = path.RemovePrefix("Assets");
+			return Path.GetDirectoryName(path);
 		}
 
 		// returns true if the given path is a valid asset directory
@@ -57,7 +59,7 @@ namespace RelationsInspector.Backend
 			if (string.IsNullOrEmpty(path))
 				return false;
 
-			if (!System.IO.Directory.Exists(path))
+			if (!Directory.Exists(path))
 				return false;
 
 			// has to be inside assets root directory

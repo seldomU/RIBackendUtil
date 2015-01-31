@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEditor;
 using RelationsInspector.Extensions;
+using System.IO;
 
 
 namespace RelationsInspector.Backend
@@ -27,7 +28,11 @@ namespace RelationsInspector.Backend
 			api = _api;
 			assetDirectory = targetAssetDirectory;
 			if (assetDirectory == null)
-				assetDirectory = EditorPrefs.GetString(prefsKeyPath + GetType().Name, Application.dataPath);
+			{
+				// have unique path preference per entity type
+				string prefsKey = Path.Combine(prefsKeyPath, typeof(T).Name);
+				assetDirectory = EditorPrefs.GetString(prefsKey, string.Empty);
+			}
 		}
 
 		public void OnGUI()
@@ -49,7 +54,7 @@ namespace RelationsInspector.Backend
 				doAddEntity |= GUILayout.Button("OK", EditorStyles.miniButtonLeft);
 			if (doAddEntity)
 			{
-				var relativeAssetDirectory = "Assets" + assetDirectory.RemovePrefix(Application.dataPath);
+				var relativeAssetDirectory = "Assets" + assetDirectory;
 				var path = System.IO.Path.Combine(relativeAssetDirectory, entityName + ".asset");
 				path = AssetDatabase.GenerateUniqueAssetPath(path);
 
@@ -75,14 +80,16 @@ namespace RelationsInspector.Backend
 			}
 
 			// asset path selector
-			pathButtonContent.text = "Path: " + assetDirectory.RemovePrefix(Application.dataPath);
+			pathButtonContent.text = "Path: " + assetDirectory;
 			if (GUILayout.Button(pathButtonContent, EditorStyles.toolbarButton))
 			{
-				string userSelectedPath = EditorUtility.OpenFolderPanel("Asset directory", assetDirectory, "");
+				string absoluteAssetDir = Path.Combine(Application.dataPath, assetDirectory);
+				string userSelectedPath = EditorUtility.OpenFolderPanel("Asset directory", absoluteAssetDir, "");
 				if (BackendUtil.IsValidAssetDirectory(userSelectedPath))
 				{
-					assetDirectory = userSelectedPath;
-					EditorPrefs.SetString(prefsKeyPath + GetType().Name, assetDirectory);
+					assetDirectory = userSelectedPath.RemovePrefix(Application.dataPath);
+					string prefsKey = Path.Combine(prefsKeyPath, typeof(T).Name);
+					EditorPrefs.SetString(prefsKey, assetDirectory);
 				}
 			}
 
