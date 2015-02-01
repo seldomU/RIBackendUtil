@@ -25,8 +25,6 @@ namespace RelationsInspector.Backend
 
 		public virtual void CreateEntity(Vector2 position) { }	// do nothing
 		
-		public virtual void DeleteEntity(T entity) { }	// do nothing
-		
 		public virtual void CreateRelation(T source, T target, P tag) { } // do nothing
 		
 		public virtual void OnEntitySelectionChange(T[] selection) 
@@ -39,7 +37,7 @@ namespace RelationsInspector.Backend
 
 		public virtual Rect OnGUI()
 		{
-			return GUILayoutUtility.GetRect(0, 0, new[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true) });
+			return BackendUtil.GetMaxRect();
 		}
 
 		public virtual Rect DrawContent(T entity, EntityDrawContext drawContext)
