@@ -48,6 +48,7 @@ namespace RelationsInspector.Backend
 			Util.DrawRectOutline(boxRect, Color.black);
 
 			// draw content
+			content.tooltip = string.Empty;	// dll handles tooltip drawing
 			GUI.Label(contentRect, content, context.style.contentStyle);
 
 			return boxRect;
