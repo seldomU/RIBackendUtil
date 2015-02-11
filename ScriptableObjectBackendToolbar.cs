@@ -103,7 +103,7 @@ namespace RelationsInspector.Backend
 		{
 			waitingForEntityName = true;
 			entityName = defaultEntityName;
-			GUI.FocusControl(newEntityFieldControlName);
+			EditorGUI.FocusTextInControl(newEntityFieldControlName);
 			this.createEntityPosition = entityPosition;
 		}
 
