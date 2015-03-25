@@ -51,6 +51,11 @@ namespace RelationsInspector.Backend
 			return entity.name;
 		}
 
+		public virtual string GetTooltip(P tag)
+		{
+			return tag.ToString();
+		}
+
 		public virtual void CreateRelation(T source, T target, P tag) { }	// to be implemented by subclass
 		public virtual void DeleteRelation(T source, T target, P tag) { }	// to be implemented by subclass
 

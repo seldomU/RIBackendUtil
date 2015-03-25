@@ -50,6 +50,11 @@ namespace RelationsInspector.Backend
 			return GetContent(entity).tooltip;
 		}
 
+		public virtual string GetTooltip(P tag)
+		{
+			return tag.ToString();
+		}
+
 		// no entity widget context menu
 		public virtual void OnEntityContextClick(IEnumerable<T> entities){ }
 
