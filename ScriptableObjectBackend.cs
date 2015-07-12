@@ -53,7 +53,7 @@ namespace RelationsInspector.Backend
 
 		public virtual string GetTooltip(P tag)
 		{
-			return tag.ToString();
+			return (tag==null)? "" : tag.ToString();
 		}
 
 		public virtual void CreateRelation(T source, T target, P tag) { }	// to be implemented by subclass
@@ -80,10 +80,15 @@ namespace RelationsInspector.Backend
 			return Color.white;
 		}
 
-		public virtual IEnumerable<Tuple<T, P>> GetRelations(T entity)
+		public virtual IEnumerable<Tuple<T, P>> GetRelated(T entity)
 		{
 			yield break; // to be implement by subclass
 		}
+
+        public virtual IEnumerable<Tuple<T, P>> GetRelating(T entity)
+        {
+            yield break;
+        }
 
 		public void OnEntitySelectionChange(T[] selection) 
 		{ 

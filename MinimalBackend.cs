@@ -18,10 +18,15 @@ namespace RelationsInspector.Backend
 			return BackendUtil.Convert<T>(targets);
 		}
 
-		public virtual IEnumerable<Tuple<T, P>> GetRelations(T entity)
+		public virtual IEnumerable<Tuple<T, P>> GetRelated(T entity)
 		{ 
 			return PairWithDefaultTag( GetRelatedEntities(entity) );
 		}
+
+        public virtual IEnumerable<Tuple<T, P>> GetRelating(T entity)
+        {
+            yield break;
+        }
 
 		public virtual void CreateEntity(Vector2 position) { }	// do nothing
 		
