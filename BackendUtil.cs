@@ -11,32 +11,30 @@ namespace RelationsInspector.Backend
 	public static class BackendUtil
 	{		
 		// pair collection entries with the default P value
-		public static IEnumerable<Tuple<T, P>> PairWithDefaultTag<T, P>(IEnumerable<T> collection)
+		public static IEnumerable<Tuple<T, P>> PairWithTag<T, P>(IEnumerable<T> collection, P tag)
 		{
 			return collection.Select(item => new Tuple<T, P>(item, default(P)));
 		}
 
-		// get Unity's internal GUIContent for the Object
-		public static GUIContent GetObjContent(Object obj)
-		{
-			GUIContent content = EditorGUIUtility.ObjectContent(obj, obj.GetType());
-			content.tooltip = content.text;
-			return content;
-		}
+		// create GUIContent for obj
+        // use Unity's internal GUIContent if possible, fall back to ToString if not
+        public static GUIContent GetContent<T>(T obj)  where T : class
+        {
+            var asObject = obj as Object;
+            if (asObject != null)
+            {
+                var content = EditorGUIUtility.ObjectContent(asObject, asObject.GetType());
+                content.tooltip = content.text;
+                return content;
+            }
+                       
+            return new GUIContent( obj.ToString(), null, obj.ToString() );
+        }
 
 		// returns the full window rect that isn't yet claimed by any GUILayout
 		public static Rect GetMaxRect()
 		{
 			return GUILayoutUtility.GetRect(0, 0, new[] { GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true) });
-		}
-
-		// convert object collection to collection of type A, skipping the items that aren't A
-		public static IEnumerable<A> Convert<A>(IEnumerable<object> collection) where A : class
-		{
-			if (collection == null)
-				return Enumerable.Empty<A>();
-
-			return collection.Select(item => item as A).Where(asA => asA != null);
 		}
 
 		// returns the asset object's full directory path, or null

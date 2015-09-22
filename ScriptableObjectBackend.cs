@@ -19,8 +19,8 @@ namespace RelationsInspector.Backend
 			string targetAssetDir = (targets == null) ? null : BackendUtil.GetAssetDirectory(targets.FirstOrDefault() as Object);
 			toolbar = new ScriptableObjectBackendToolbar<T>(api, targetAssetDir);
 
-			return BackendUtil.Convert<T>(targets);
-		}
+            return (targets == null) ? Enumerable.Empty<T>() : targets.OfType<T>();
+        }
 
 		public virtual Rect DrawContent(T entity, EntityDrawContext drawContext)
 		{
