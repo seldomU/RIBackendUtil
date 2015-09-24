@@ -110,11 +110,11 @@ namespace RelationsInspector.Backend
         public virtual void OnEntitySelectionChange(T[] selection) 
 		{
             Selection.objects = selection.OfType<Object>().ToArray();
-            /*if ( !typeof(Object).IsAssignableFrom(typeof(T)) )
-				return;
-
-			Selection.objects = selection.Select(obj => obj as Object).ToArray();*/
 		}
+
+        // Event handler for when Unity's editor selection has changed
+        // we ignore that (not syncing Unity's with RI's selection)
+        public virtual void OnUnitySelectionChange(){}
 
         // Event handler for context clicks on entity widgets
 		// we ignore those (no context menu)

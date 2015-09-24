@@ -90,9 +90,11 @@ namespace RelationsInspector.Backend
             yield break;
         }
 
-		public void OnEntitySelectionChange(T[] selection) 
+		public virtual void OnEntitySelectionChange(T[] selection) 
 		{ 
 			Selection.objects = selection.ToArray(); 
 		}
+
+        public virtual void OnUnitySelectionChange(){}
 	}
 }
