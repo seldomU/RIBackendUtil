@@ -46,12 +46,12 @@ namespace RelationsInspector.Backend
 			api.RemoveEntity(entity);
 		}
 
-		public virtual string GetTooltip(T entity)
+		public virtual string GetEntityTooltip(T entity)
 		{
 			return entity.name;
 		}
 
-		public virtual string GetTooltip(P tag)
+		public virtual string GetTagTooltip(P tag)
 		{
 			return (tag==null)? "" : tag.ToString();
 		}
