@@ -13,53 +13,92 @@ namespace RelationsInspector.Backend
 		protected RelationsInspectorAPI api;
 		ScriptableObjectBackendToolbar<T> toolbar;
 
-		public virtual IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
+        // Init turns the inspection target objects into root entities of the graph
+        // we assume the two sets to be identical, so we're just pass them through
+        // and initialize the toolbar
+        public virtual IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
 		{
-			this.api = api;
+            this.api = api;
 			string targetAssetDir = (targets == null) ? null : BackendUtil.GetAssetDirectory(targets.FirstOrDefault() as Object);
 			toolbar = new ScriptableObjectBackendToolbar<T>(api, targetAssetDir);
 
             return (targets == null) ? Enumerable.Empty<T>() : targets.OfType<T>();
         }
 
-		public virtual Rect DrawContent(T entity, EntityDrawContext drawContext)
+        // GetRelated returns the entities that are related to the given entity, and the type of their relation
+        // to be implemented by subclass
+        public virtual IEnumerable<Tuple<T, P>> GetRelated(T entity)
+        {
+            yield break; // to be implement by subclass
+        }
+
+        // GetRelating returns the entities that are relating to the given entity, and the type of their relation
+        // to be implemented by subclass
+        public virtual IEnumerable<Tuple<T, P>> GetRelating(T entity)
+        {
+            yield break;
+        }
+
+        // UI wants to create an entity at the given position
+        // the toolbar will ask for a name and take care of creating the entity
+        public virtual void CreateEntity(Vector2 position)
+        {
+            toolbar.InitEntityCreation(position);
+            api.Repaint();
+        }
+
+        // UI wants to create a relation between source and target (of type tag)
+        // to be implemented by subclass
+        public virtual void CreateRelation(T source, T target, P tag) { }
+
+        // DrawContent is responsible for rendering entity information
+        // it returns the Rect that it filled
+        public virtual Rect DrawContent(T entity, EntityDrawContext drawContext)
 		{
 			return DrawUtil.DrawContent( new GUIContent(entity.name), drawContext);
 		}
 
-		public virtual Rect OnGUI()
-		{
-			toolbar.OnGUI();
-			return BackendUtil.GetMaxRect();
-		}
+        // GetRelationColor maps a relation tag value to a color
+        // we assume only one kind of relation, so map everything to white
+        public virtual Color GetRelationColor(P relationTagValue)
+        {
+            return Color.white;
+        }
 
-		public virtual void CreateEntity(Vector2 position)
-		{
-			toolbar.ShowNamePrompt(position);
-			api.Repaint();
-		}
-
-		public void DeleteEntity(T entity)
-		{
-			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(entity));
-			AssetDatabase.SaveAssets();
-			api.RemoveEntity(entity);
-		}
-
-		public virtual string GetEntityTooltip(T entity)
+        // GetEntityTooltip returns a tooltip for the given entity, to be rendered by RI
+        public virtual string GetEntityTooltip(T entity)
 		{
 			return entity.name;
 		}
 
-		public virtual string GetTagTooltip(P tag)
+        // GetTagTooltip returns a tooltip for the given relation tag, to be rendered by RI
+        public virtual string GetTagTooltip(P tag)
 		{
 			return (tag==null)? "" : tag.ToString();
 		}
 
-		public virtual void CreateRelation(T source, T target, P tag) { }	// to be implemented by subclass
-		public virtual void DeleteRelation(T source, T target, P tag) { }	// to be implemented by subclass
+        // OnGUI is responible for rendering any backend GUI, like controls or a toolbar
+        // returns the rect that will be used for graph drawing
+        public virtual Rect OnGUI()
+        {
+            toolbar.OnGUI();
+            return BackendUtil.GetMaxRect();
+        }
 
-		public virtual void OnEntityContextClick(IEnumerable<T> entities)
+        // Event handler for when the set of selected entities has changed
+        // we update Unity's object selection to match RI's
+        public virtual void OnEntitySelectionChange(T[] selection)
+        {
+            Selection.objects = selection.ToArray();
+        }
+
+        // Event handler for when Unity's editor selection has changed
+        // we ignore that (not syncing Unity's with RI's selection)
+        public virtual void OnUnitySelectionChange() { }
+
+        // Event handler for context clicks on entity widgets
+        // we offer options to remove the entity or create a relation that originates from it
+        public virtual void OnEntityContextClick(IEnumerable<T> entities)
 		{
 			var menu = new GenericMenu();
 			menu.AddItem(new GUIContent("Remove entity"), false, () => { foreach (var e in entities) DeleteEntity(e); });
@@ -67,34 +106,28 @@ namespace RelationsInspector.Backend
 			menu.ShowAsContext();
 		}
 
-		public virtual void OnRelationContextClick(T source, T target, P tag)
+        // entity context menu wants to remove the entity
+        public void DeleteEntity(T entity)
+        {
+            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(entity));
+            AssetDatabase.SaveAssets();
+            api.RemoveEntity(entity);
+        }
+
+        // Event handler for context clicks on relation widgets
+        // we offer the option to remove the relation
+        public virtual void OnRelationContextClick(T source, T target, P tag)
 		{
 			var menu = new GenericMenu();
 			menu.AddItem(new GUIContent("Remove relation"), false, () => DeleteRelation(source, target, tag) );
 			menu.ShowAsContext();
 		}
 
+        // UI wants to delete a relation between source and target (of type tag)
+        // to be implemented by subclass
+        public virtual void DeleteRelation(T source, T target, P tag) { }
+        
 
-		public virtual Color GetRelationColor(P relationTagValue)
-		{
-			return Color.white;
-		}
-
-		public virtual IEnumerable<Tuple<T, P>> GetRelated(T entity)
-		{
-			yield break; // to be implement by subclass
-		}
-
-        public virtual IEnumerable<Tuple<T, P>> GetRelating(T entity)
-        {
-            yield break;
-        }
-
-		public virtual void OnEntitySelectionChange(T[] selection) 
-		{ 
-			Selection.objects = selection.ToArray(); 
-		}
-
-        public virtual void OnUnitySelectionChange(){}
+        
 	}
 }

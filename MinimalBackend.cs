@@ -74,13 +74,13 @@ namespace RelationsInspector.Backend
             return Color.white;
         }
 
-        // GetTooltip returns a tooltip for the given entity, to be rendered by RI
+        // GetEntityTooltip returns a tooltip for the given entity, to be rendered by RI
         public virtual string GetEntityTooltip(T entity)
         {
             return GetContent(entity).tooltip;
         }
 
-        // GetTooltip returns a tooltip for the given relation tag, to be rendered by RI
+        // GetTagTooltip returns a tooltip for the given relation tag, to be rendered by RI
         public virtual string GetTagTooltip(P tag)
         {
             if (tag == null)
