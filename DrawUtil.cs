@@ -35,12 +35,17 @@ namespace RelationsInspector.Backend
 			// find a box around it, with some padding
 			Rect boxRect = contentRect.AddBorder(context.style.contentPadding);
 
-			// selected items get highlighted
-			if (context.isSelected)
-			{
-				var auraRect = boxRect.AddBorder(context.style.highlightStrength);
-				EditorGUI.DrawRect(auraRect, context.style.highlightColor);
-			}
+            // selected items get highlighted
+            if ( context.isSelected )
+            {
+                var auraRect = boxRect.AddBorder( context.style.highlightStrength );
+                EditorGUI.DrawRect( auraRect, context.style.highlightColor );
+            }
+            else if ( context.isUnexlored )
+            {
+                var auraRect = boxRect.AddBorder( Mathf.Max(1, context.style.highlightStrength/2) );
+                EditorGUI.DrawRect( auraRect, context.style.unexploredColor );
+            }
 
 			// draw content box
 			var contentColor = context.isTarget ? context.style.targetBackgroundColor : context.style.backgroundColor;
@@ -57,20 +62,30 @@ namespace RelationsInspector.Backend
 		// draw content in circle widget
 		public static Rect DrawCircle(GUIContent content, EntityDrawContext context)
 		{
-			float radius = context.style.widgetRadius;
+			float contentSize = 2 * context.style.widgetRadius;
+			float radius = context.style.widgetRadius * sqrt2;
 
-			// selected items get highlighted
-			if (context.isSelected)
-			{
-				// draw aura
-				float highlightRadius = radius + context.style.highlightStrength;
-				Handles.color = context.style.highlightColor;
-				Handles.DrawSolidDisc(context.position, Vector3.forward, highlightRadius);
+            // selected items get highlighted
+            if ( context.isSelected )
+            {
+                // draw aura
+                float highlightRadius = radius + context.style.highlightStrength;
+                Handles.color = context.style.highlightColor;
+                Handles.DrawSolidDisc( context.position, Vector3.forward, highlightRadius );
 
-				Handles.color = Color.black;
-				Handles.DrawWireDisc(context.position, Vector3.forward, highlightRadius);
-				Handles.color = Color.white;
-			}
+                Handles.color = Color.black;
+                Handles.DrawWireDisc( context.position, Vector3.forward, highlightRadius );
+                Handles.color = Color.white;
+            }
+            else if ( context.isUnexlored )
+            {
+                // draw
+                float highlightRadius = radius + Mathf.Max( 1, context.style.highlightStrength / 2 );
+                Handles.color = context.style.unexploredColor;
+                Handles.DrawSolidDisc( context.position, Vector3.forward, highlightRadius );
+
+                Handles.color = Color.white;
+            }
 
 			// draw entity disc
 			Handles.color = context.isTarget ? context.style.targetBackgroundColor : context.style.backgroundColor;
@@ -84,7 +99,8 @@ namespace RelationsInspector.Backend
 			// draw content icon, if any
 			if (content.image != null)
 			{
-				Rect contentRect = Util.CenterRect(context.position, new Vector2(2 * radius / sqrt2, 2 * radius / sqrt2));
+                //2*radius/sqrt2
+				Rect contentRect = Util.CenterRect(context.position, new Vector2(contentSize, contentSize));
 				GUI.DrawTexture(contentRect, content.image, ScaleMode.ScaleToFit);
 			}
 
