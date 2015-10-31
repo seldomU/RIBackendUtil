@@ -8,7 +8,7 @@ namespace RelationsInspector.Backend
     // for backend api reference see https://github.com/seldomU/RIBackendUtil/wiki/IGraphBackend-members
     // for backend development guide see https://github.com/seldomU/RIBackendUtil/wiki/Backend-development
 
-    public abstract class MinimalBackend<T,P> : IGraphBackend<T,P> where T : class
+    public abstract class MinimalBackend2<T,P> : IGraphBackend2<T,P> where T : class
 	{
 
         #region graph construction
@@ -22,14 +22,15 @@ namespace RelationsInspector.Backend
 
         // GetRelated returns the entities that are related to the given entity, and the type of their relation
         // we assume all relations to be of the same kind 
-        public virtual IEnumerable<Tuple<T, P>> GetRelated(T entity)
-		{ 
-			return BackendUtil.PairWithTag( GetRelatedEntities(entity), default(P) );
+        public virtual IEnumerable<Relation<T, P>> GetRelated(T entity)
+		{
+            foreach ( var related in GetRelatedEntities( entity ) )
+                yield return new Relation<T,P>( entity, related, default( P ) );
 		}
 
         // GetRelating returns the entities that are relating to the given entity, and the type of their relation
         // we assume all relations to be covered by GetRelated, so there is no need to return anything here
-        public virtual IEnumerable<Tuple<T, P>> GetRelating(T entity)
+        public virtual IEnumerable<Relation<T, P>> GetRelating(T entity)
         {
             yield break;
         }
@@ -115,10 +116,15 @@ namespace RelationsInspector.Backend
 
         // Event handler for context clicks on entity widgets
 		// we ignore those (no context menu)
-		public virtual void OnEntityContextClick(IEnumerable<T> entities){ }
+		public virtual void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu){ }
 
         // Event handler for context clicks on relation widgets
         // we ignore those (no context menu)
-        public virtual void OnRelationContextClick(T source, T target, P tag) { }
-	}
+        public virtual void OnRelationContextClick(T source, T target, P tag, GenericMenu menu ) { }
+
+        public void OnEvent( Event e )
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }
