@@ -120,7 +120,7 @@ namespace RelationsInspector.Backend
 
         // Event handler for context clicks on relation widgets
         // we ignore those (no context menu)
-        public virtual void OnRelationContextClick(T source, T target, P tag, GenericMenu menu ) { }
+        public virtual void OnRelationContextClick(Relation<T,P> relation, GenericMenu menu ) { }
 
         public void OnEvent( Event e )
         {
