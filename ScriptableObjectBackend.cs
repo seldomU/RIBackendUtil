@@ -25,18 +25,11 @@ namespace RelationsInspector.Backend
             return (targets == null) ? Enumerable.Empty<T>() : targets.OfType<T>();
         }
 
-        // GetRelated returns the entities that are related to the given entity, and the type of their relation
+        // returns the entities that are related to the given entity, and the type of their relation
         // to be implemented by subclass
-        public virtual IEnumerable<Tuple<T, P>> GetRelated(T entity)
+        public virtual IEnumerable<Relation<T, P>> GetRelations(T entity)
         {
             yield break; // to be implement by subclass
-        }
-
-        // GetRelating returns the entities that are relating to the given entity, and the type of their relation
-        // to be implemented by subclass
-        public virtual IEnumerable<Tuple<T, P>> GetRelating(T entity)
-        {
-            yield break;
         }
 
         // UI wants to create an entity at the given position
@@ -98,12 +91,10 @@ namespace RelationsInspector.Backend
 
         // Event handler for context clicks on entity widgets
         // we offer options to remove the entity or create a relation that originates from it
-        public virtual void OnEntityContextClick(IEnumerable<T> entities)
+        public virtual void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu)
 		{
-			var menu = new GenericMenu();
 			menu.AddItem(new GUIContent("Remove entity"), false, () => { foreach (var e in entities) DeleteEntity(e); });
 			menu.AddItem( new GUIContent("Add relation"),false, () => api.InitRelation(entities.ToArray(), default(P)) );
-			menu.ShowAsContext();
 		}
 
         // entity context menu wants to remove the entity
@@ -116,11 +107,9 @@ namespace RelationsInspector.Backend
 
         // Event handler for context clicks on relation widgets
         // we offer the option to remove the relation
-        public virtual void OnRelationContextClick(T source, T target, P tag)
+        public virtual void OnRelationContextClick(Relation<T,P> relation, GenericMenu menu)
 		{
-			var menu = new GenericMenu();
-			menu.AddItem(new GUIContent("Remove relation"), false, () => DeleteRelation(source, target, tag) );
-			menu.ShowAsContext();
+			menu.AddItem(new GUIContent("Remove relation"), false, () => DeleteRelation(relation.Source, relation.Target, relation.Tag) );
 		}
 
         // UI wants to delete a relation between source and target (of type tag)
