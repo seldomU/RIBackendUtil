@@ -21,19 +21,12 @@ namespace RelationsInspector.Backend
 		}
 
         // GetRelated returns the entities that are related to the given entity, and the type of their relation
-        // we assume all relations to be of the same kind 
-        public virtual IEnumerable<Relation<T, P>> GetRelated(T entity)
+        // we assume all relations to be of the same kind (default P)
+        public virtual IEnumerable<Relation<T, P>> GetRelations(T entity)
 		{
             foreach ( var related in GetRelatedEntities( entity ) )
                 yield return new Relation<T,P>( entity, related, default( P ) );
 		}
-
-        // GetRelating returns the entities that are relating to the given entity, and the type of their relation
-        // we assume all relations to be covered by GetRelated, so there is no need to return anything here
-        public virtual IEnumerable<Relation<T, P>> GetRelating(T entity)
-        {
-            yield break;
-        }
 
         // utility method, returns all entities that the given entity is related to
         // override at least this method to get any relations 
