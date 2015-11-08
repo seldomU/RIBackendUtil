@@ -10,6 +10,7 @@ namespace RelationsInspector.Backend
 
     public abstract class MinimalBackend<T,P> : IGraphBackend<T,P> where T : class
 	{
+        protected RelationsInspectorAPI api;
 
         #region graph construction
 
@@ -17,6 +18,7 @@ namespace RelationsInspector.Backend
         // we assume the two sets to be identical, so we're just pass them through
         public virtual IEnumerable<T> Init( IEnumerable<object> targets, RelationsInspectorAPI api )
         {
+            this.api = api;
             return ( targets == null ) ? Enumerable.Empty<T>() : targets.OfType<T>();
         }
 
