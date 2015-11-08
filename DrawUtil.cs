@@ -30,33 +30,35 @@ namespace RelationsInspector.Backend
 			// determine the space required for drawing the content
 			EditorGUIUtility.SetIconSize(boxIconSize);
 			Vector2 contentExtents = context.style.contentStyle.CalcSize(content);
-			Rect contentRect = Util.CenterRect(context.position, contentExtents);
+			Rect labelRect = Util.CenterRect(context.position, contentExtents);
 
 			// find a box around it, with some padding
-			Rect boxRect = contentRect.AddBorder(context.style.contentPadding);
+			Rect contentRect = labelRect.AddBorder(context.style.contentPadding);
+            Rect outlineRect = contentRect.AddBorder( 1 );
 
             // selected items get highlighted
             if ( context.isSelected )
             {
-                var auraRect = boxRect.AddBorder( context.style.highlightStrength );
+                var auraRect = outlineRect.AddBorder( context.style.highlightStrength );
                 EditorGUI.DrawRect( auraRect, context.style.highlightColor );
             }
             else if ( context.isUnexlored )
             {
-                var auraRect = boxRect.AddBorder( Mathf.Max(1, context.style.highlightStrength/2) );
+                var auraRect = outlineRect.AddBorder( Mathf.CeilToInt(context.style.highlightStrength/2) );
                 EditorGUI.DrawRect( auraRect, context.style.unexploredColor );
             }
 
-			// draw content box
-			var contentColor = context.isTarget ? context.style.targetBackgroundColor : context.style.backgroundColor;
-			EditorGUI.DrawRect(boxRect, contentColor);
-			Util.DrawRectOutline(boxRect, Color.black);
+            // draw outline rect
+            EditorGUI.DrawRect( outlineRect, Color.black );
 
-			// draw content
-			content.tooltip = string.Empty;	// dll handles tooltip drawing
-			GUI.Label(contentRect, content, context.style.contentStyle);
+			// draw content rect
+            EditorGUI.DrawRect( contentRect, context.isTarget ? context.style.targetBackgroundColor : context.style.backgroundColor );
 
-			return boxRect;
+            // draw label
+            content.tooltip = string.Empty; // RI dll handles tooltip drawing
+            GUI.Label( labelRect, content, context.style.contentStyle );
+
+			return contentRect;
 		}
 
 		// draw content in circle widget
