@@ -115,8 +115,8 @@ namespace RelationsInspector.Backend
         // UI wants to delete a relation between source and target (of type tag)
         // to be implemented by subclass
         public virtual void DeleteRelation(T source, T target, P tag) { }
-        
 
-        
+        // event handler for generic commands
+        public virtual void OnCommand( string command ) { }
 	}
 }
