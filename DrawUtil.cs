@@ -44,7 +44,7 @@ namespace RelationsInspector.Backend
             }
             else if ( context.isUnexlored )
             {
-                var auraRect = outlineRect.AddBorder( Mathf.CeilToInt(context.style.highlightStrength/2) );
+                var auraRect = outlineRect.AddBorder( context.style.highlightStrength );
                 EditorGUI.DrawRect( auraRect, context.style.unexploredColor );
             }
 
@@ -70,19 +70,17 @@ namespace RelationsInspector.Backend
             // selected items get highlighted
             if ( context.isSelected )
             {
-                // draw aura
+                // draw selection aura
                 float highlightRadius = radius + context.style.highlightStrength;
                 Handles.color = context.style.highlightColor;
                 Handles.DrawSolidDisc( context.position, Vector3.forward, highlightRadius );
 
-                Handles.color = Color.black;
-                Handles.DrawWireDisc( context.position, Vector3.forward, highlightRadius );
                 Handles.color = Color.white;
             }
             else if ( context.isUnexlored )
             {
-                // draw
-                float highlightRadius = radius + Mathf.Max( 1, context.style.highlightStrength / 2 );
+                // draw unexplored aura
+                float highlightRadius = radius + context.style.highlightStrength;
                 Handles.color = context.style.unexploredColor;
                 Handles.DrawSolidDisc( context.position, Vector3.forward, highlightRadius );
 
