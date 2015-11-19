@@ -22,6 +22,9 @@ namespace RelationsInspector.Backend
             return ( targets == null ) ? Enumerable.Empty<T>() : targets.OfType<T>();
         }
 
+        // Called when the window object is being destroyed or a new backend is replacing this one
+        public virtual void OnDestroy(){}
+
         // GetRelated returns the entities that are related to the given entity, and the type of their relation
         // we assume all relations to be of the same kind (default P)
         public virtual IEnumerable<Relation<T, P>> GetRelations( T entity )
