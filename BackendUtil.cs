@@ -77,5 +77,42 @@ namespace RelationsInspector.Backend
 			AssetDatabase.SaveAssets();
 			return scriptableObject;
 		}
+
+        public static string DrawEntitySelectSearchField( string searchString, RelationsInspectorAPI api )
+        {
+            System.Action<string> onChange = str =>
+            {
+                if ( string.IsNullOrEmpty( str ) )
+                    api.SelectEntityNodes( x => { return false; } );
+                else
+                    api.SelectEntityNodes( x =>
+                    {
+                        return ( x is Object ) ?
+                            ( x as Object ).name.ToLower().Contains( str.ToLower() ) :
+                            false;
+                    } );
+            };
+
+            return DrawSearchField( searchString, onChange );
+        }
+
+        public static string DrawSearchField( string searchString, System.Action<string> onChange)
+        {
+            EditorGUI.BeginChangeCheck();
+            searchString = EditorGUILayout.TextField( searchString, GUI.skin.FindStyle( "ToolbarSeachTextField" ) );
+            bool resetSearchString = GUILayout.Button( "", GUI.skin.FindStyle( "ToolbarSeachCancelButton" ) );
+            if ( EditorGUI.EndChangeCheck() )
+            {
+                if ( resetSearchString )
+                {
+                    searchString = string.Empty;
+                    GUI.FocusControl( null );
+                }
+
+                onChange( searchString );
+            }
+
+            return searchString;
+        }
 	}
 }
