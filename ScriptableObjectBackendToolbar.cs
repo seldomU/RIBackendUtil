@@ -63,7 +63,7 @@ namespace RelationsInspector.Backend
             if (!waitingForEntityName)
             {
                 if (GUILayout.Button(createEntityButtonContent, EditorStyles.toolbarButton))
-                    InitEntityCreation(new Vector2(50, 50));
+                    InitEntityCreation(Vector2.zero);
             }
 
             // asset path selector
