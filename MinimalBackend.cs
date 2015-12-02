@@ -50,7 +50,7 @@ namespace RelationsInspector.Backend
 
         // UI wants to create a relation between source and target (of type tag)
         // we assume graph manipulation is unwanted and ignore the event
-        public virtual void CreateRelation( T source, T target, P tag ) { } // do nothing
+        public virtual void CreateRelation( T source, T target ) { } // do nothing
 
         #endregion
 

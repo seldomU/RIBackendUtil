@@ -43,9 +43,9 @@ namespace RelationsInspector.Backend
             api.Repaint();
         }
 
-        // UI wants to create a relation between source and target (of type tag)
+        // UI wants to create a relation between source and target
         // to be implemented by subclass
-        public virtual void CreateRelation(T source, T target, P tag) { }
+        public virtual void CreateRelation(T source, T target) { }
 
         // DrawContent is responsible for rendering entity information
         // it returns the Rect that it filled
@@ -97,7 +97,7 @@ namespace RelationsInspector.Backend
         public virtual void OnEntityContextClick(IEnumerable<T> entities, GenericMenu menu)
 		{
 			menu.AddItem(new GUIContent("Remove entity"), false, () => { foreach (var e in entities) DeleteEntity(e); });
-			menu.AddItem( new GUIContent("Add relation"),false, () => api.InitRelation(entities.ToArray(), default(P)) );
+			menu.AddItem( new GUIContent("Add relation"),false, () => api.InitRelation(entities.ToArray()) );
 		}
 
         // entity context menu wants to remove the entity
