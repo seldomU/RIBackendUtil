@@ -80,20 +80,21 @@ namespace RelationsInspector.Backend
 
         public static string DrawEntitySelectSearchField( string searchString, RelationsInspectorAPI api )
         {
-            System.Action<string> onChange = str =>
+            // when the search string changes, select the entities with matching names
+            System.Action<string> onSearchStringChange = searchStr =>
             {
-                if ( string.IsNullOrEmpty( str ) )
+                if ( string.IsNullOrEmpty( searchStr ) )
                     api.SelectEntityNodes( x => { return false; } );
                 else
                     api.SelectEntityNodes( x =>
                     {
                         return ( x is Object ) ?
-                            ( x as Object ).name.ToLower().Contains( str.ToLower() ) :
+                            ( x as Object ).name.ToLower().Contains( searchStr.ToLower() ) :
                             false;
                     } );
             };
 
-            return DrawSearchField( searchString, onChange );
+            return DrawSearchField( searchString, onSearchStringChange );
         }
 
         public static string DrawSearchField( string searchString, System.Action<string> onChange)
