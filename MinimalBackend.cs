@@ -29,15 +29,7 @@ namespace RelationsInspector.Backend
         // we assume all relations to be of the same kind (default P)
         public virtual IEnumerable<Relation<T, P>> GetRelations( T entity )
         {
-            foreach ( var related in GetRelatedEntities( entity ) )
-                yield return new Relation<T, P>( entity, related, default( P ) );
-        }
-
-        // utility method, returns all entities that the given entity is related to
-        // override at least this method to get any relations 
-        public virtual IEnumerable<T> GetRelatedEntities( T entity )
-        {
-            return Enumerable.Empty<T>();
+            yield break;
         }
 
         #endregion
