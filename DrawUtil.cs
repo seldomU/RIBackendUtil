@@ -7,8 +7,8 @@ namespace RelationsInspector.Backend
 {
 	public static class DrawUtil
 	{
-		static float sqrt2 = Mathf.Sqrt(2f);
-		static Vector2 boxIconSize = new Vector2(16, 16);
+        public static float sqrt2 = Mathf.Sqrt(2f);
+        public static Vector2 boxIconSize = new Vector2(16, 16);
 
 		// draw the content in a rect or circle widget, depending on context
 		public static Rect DrawContent(GUIContent content, EntityDrawContext context)
