@@ -55,15 +55,13 @@ namespace RelationsInspector.Backend
 			Vector2 contentExtents = context.style.contentStyle.CalcSize(content);
 			Rect labelRect = Util.CenterRect(context.position, contentExtents);
 
-			// find a box around it, with some padding
-			Rect contentRect = labelRect.AddBorder(context.style.contentPadding);
-            DrawBoxAndBackground( contentRect, context );
+            DrawBoxAndBackground( labelRect, context );
 
             // draw label
             content.tooltip = string.Empty; // RI dll handles tooltip drawing
             GUI.Label( labelRect, content, context.style.contentStyle );
 
-			return contentRect;
+			return labelRect;
 		}
 
         public static void DrawCircleAndOutline( float radius, EntityDrawContext context )
