@@ -8,6 +8,7 @@ namespace RelationsInspector.Backend
 	{
 		public static float sqrt2 = Mathf.Sqrt(2f);
 		public static Vector2 boxIconSize = new Vector2(16, 16);
+        static Vector2 shadowOffset = new Vector2( 2, 2);
 
 		// draw the content in a rect or circle widget, depending on context
 		public static Rect DrawContent(GUIContent content, EntityDrawContext context)
@@ -38,6 +39,11 @@ namespace RelationsInspector.Backend
             {
                 var auraRect = outlineRect.AddBorder( context.style.highlightStrength );
                 EditorGUI.DrawRect( auraRect, context.style.unexploredColor );
+            }
+            else
+            {
+                // draw shadow
+                EditorGUI.DrawRect( outlineRect.Move( shadowOffset ), context.style.shadowColor );
             }
 
             // draw outline rect
