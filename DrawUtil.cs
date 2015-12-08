@@ -64,36 +64,46 @@ namespace RelationsInspector.Backend
 			return labelRect;
 		}
 
+        static void DrawSquareTexture( Vector2 center, float width, Color color, Texture2D texture )
+        {
+            var rect = Util.CenterRect( center, new Vector2( width, width ) );
+            GUI.color = color;
+            GUI.DrawTexture( rect, texture );
+            GUI.color = Color.white;
+        }
+
         public static void DrawCircleAndOutline( float radius, EntityDrawContext context )
         {
+            float outlineRadius = radius + 1;
+
             // selected items get highlighted
             if ( context.isSelected )
             {
                 // draw selection aura
-                float highlightRadius = radius + context.style.highlightStrength;
-                Handles.color = context.style.highlightColor;
-                Handles.DrawSolidDisc( context.position, Vector3.forward, highlightRadius );
-
-                Handles.color = Color.white;
+                DrawSquareTexture(
+                    context.position,
+                    2 * ( outlineRadius + context.style.highlightStrength),
+                    context.style.highlightColor,
+                    context.style.discImage
+                    );
             }
             else if ( context.isUnexlored )
             {
                 // draw unexplored aura
-                float highlightRadius = radius + context.style.highlightStrength;
-                Handles.color = context.style.unexploredColor;
-                Handles.DrawSolidDisc( context.position, Vector3.forward, highlightRadius );
-
-                Handles.color = Color.white;
+                DrawSquareTexture(
+                    context.position,
+                    2 * ( outlineRadius + context.style.highlightStrength),
+                    context.style.unexploredColor,
+                    context.style.discImage
+                    );
             }
 
-            // draw entity disc
-            Handles.color = context.isTarget ? context.style.targetBackgroundColor : context.style.backgroundColor;
-            Handles.DrawSolidDisc( context.position, Vector3.forward, radius );
+            // draw outline disc
+            DrawSquareTexture( context.position, 2 * outlineRadius, Color.black, context.style.discImage );
 
-            // draw disc outline
-            Handles.color = Color.black;
-            Handles.DrawWireDisc( context.position, Vector3.forward, radius );
-            Handles.color = Color.white;
+            // draw entity disc
+            Color entityColor = context.isTarget ? context.style.targetBackgroundColor : context.style.backgroundColor;
+            DrawSquareTexture( context.position, 2* radius, entityColor, context.style.discImage);
         }
 
         // draw content in circle widget
