@@ -13,16 +13,19 @@ namespace RelationsInspector.Backend
 		protected RelationsInspectorAPI api;
 		ScriptableObjectBackendToolbar<T> toolbar;
 
+        public virtual void Awake( RelationsInspectorAPI api )
+        {
+            this.api = api;
+        }
+
         // Init turns the inspection target objects into root entities of the graph
         // we assume the two sets to be identical, so we're just pass them through
         // and initialize the toolbar
-        public virtual IEnumerable<T> Init(IEnumerable<object> targets, RelationsInspectorAPI api)
+        public virtual IEnumerable<T> Init(object target )
 		{
-            this.api = api;
-			string targetAssetDir = (targets == null) ? null : BackendUtil.GetAssetDirectory(targets.FirstOrDefault() as Object);
+			string targetAssetDir = (target == null) ? null : BackendUtil.GetAssetDirectory(target as Object);
 			toolbar = new ScriptableObjectBackendToolbar<T>(api, targetAssetDir);
-
-            return (targets == null) ? Enumerable.Empty<T>() : targets.OfType<T>();
+            return ( target is T ) ? new T[] { target as T } : new T[ 0 ];
         }
 
         // Called when the window object is being destroyed or a new backend is replacing this one

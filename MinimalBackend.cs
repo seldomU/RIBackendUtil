@@ -14,12 +14,16 @@ namespace RelationsInspector.Backend
 
         #region graph construction
 
-        // Init turns the inspection target objects into root entities of the graph
-        // we assume the two sets to be identical, so we're just pass them through
-        public virtual IEnumerable<T> Init( IEnumerable<object> targets, RelationsInspectorAPI api )
+        public virtual void Awake( RelationsInspectorAPI api )
         {
             this.api = api;
-            return ( targets == null ) ? Enumerable.Empty<T>() : targets.OfType<T>();
+        }
+
+        // Init turns the inspection target objects into root entities of the graph
+        // we assume the two sets to be identical, so we're just pass them through
+        public virtual IEnumerable<T> Init( object target )
+        {
+            return ( target is T ) ? new T[] { target as T} : new T[ 0 ];
         }
 
         // Called when the window object is being destroyed or a new backend is replacing this one
