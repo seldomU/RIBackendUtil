@@ -16,6 +16,7 @@ namespace RelationsInspector.Backend
         public virtual void Awake( RelationsInspectorAPI api )
         {
             this.api = api;
+            toolbar = new ScriptableObjectBackendToolbar<T>( api );
         }
 
         // Init turns the inspection target objects into root entities of the graph
@@ -23,8 +24,9 @@ namespace RelationsInspector.Backend
         // and initialize the toolbar
         public virtual IEnumerable<T> Init(object target )
 		{
-			string targetAssetDir = (target == null) ? null : BackendUtil.GetAssetDirectory(target as Object);
-			toolbar = new ScriptableObjectBackendToolbar<T>(api, targetAssetDir);
+            if ( target != null )
+                toolbar.SetAssetPath( BackendUtil.GetAssetDirectory( target as Object ) );
+			
             return ( target is T ) ? new T[] { target as T } : new T[ 0 ];
         }
 

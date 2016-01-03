@@ -26,17 +26,21 @@ namespace RelationsInspector.Backend
 		Vector2 createEntityPosition;   // widget coordinates of the entity to create
 
         // ctor
-		public ScriptableObjectBackendToolbar(RelationsInspectorAPI api, string targetAssetPath)
+		public ScriptableObjectBackendToolbar(RelationsInspectorAPI api)
 		{
 			this.api = api;
-			assetPath = targetAssetPath;
-			if (assetPath == null)
-			{
-				// have unique path preference per entity type
-				string prefsKey = Path.Combine(prefsKeyPath, typeof(T).Name);
-				assetPath = EditorPrefs.GetString(prefsKey, string.Empty);
-			}
 		}
+
+        public void SetAssetPath( string path )
+        {
+            assetPath = path;
+            if ( assetPath == null )
+            {
+                // have unique path preference per entity type
+                string prefsKey = Path.Combine( prefsKeyPath, typeof( T ).Name );
+                assetPath = EditorPrefs.GetString( prefsKey, string.Empty );
+            }
+        }
 
         public void OnGUI()
         {
