@@ -40,10 +40,6 @@ namespace RelationsInspector.Backend
 
         #region graph modification
 
-        // UI wants to create an entity at the given position
-        // we assume graph manipulation is unwanted and ignore the event
-        public virtual void CreateEntity( Vector2 position ) { }  // do nothing
-
         // UI wants to create a relation between source and target (of type tag)
         // we assume graph manipulation is unwanted and ignore the event
         public virtual void CreateRelation( T source, T target ) { } // do nothing

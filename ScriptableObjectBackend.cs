@@ -40,14 +40,6 @@ namespace RelationsInspector.Backend
             yield break; // to be implement by subclass
         }
 
-        // UI wants to create an entity at the given position
-        // the toolbar will ask for a name and take care of creating the entity
-        public virtual void CreateEntity(Vector2 position)
-        {
-            toolbar.InitEntityCreation(position);
-            api.Repaint();
-        }
-
         // UI wants to create a relation between source and target
         // to be implemented by subclass
         public virtual void CreateRelation(T source, T target) { }
