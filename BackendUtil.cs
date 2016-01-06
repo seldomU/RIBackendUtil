@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using System.IO;
-using System.Collections;
 using System.Collections.Generic;
 using RelationsInspector.Extensions;
 
@@ -17,19 +16,19 @@ namespace RelationsInspector.Backend
 		}
 
 		// create GUIContent for obj
-        // use Unity's internal GUIContent if possible, fall back to ToString if not
-        public static GUIContent GetContent<T>(T obj)  where T : class
-        {
-            var asObject = obj as Object;
-            if (asObject != null)
-            {
-                var content = EditorGUIUtility.ObjectContent(asObject, asObject.GetType());
-                content.tooltip = content.text;
-                return content;
-            }
-                       
-            return new GUIContent( obj.ToString(), null, obj.ToString() );
-        }
+		// use Unity's internal GUIContent if possible, fall back to ToString if not
+		public static GUIContent GetContent<T>(T obj)  where T : class
+		{
+			var asObject = obj as Object;
+			if (asObject != null)
+			{
+				var content = EditorGUIUtility.ObjectContent(asObject, asObject.GetType());
+				content.tooltip = content.text;
+				return content;
+			}
+					   
+			return new GUIContent( obj.ToString(), null, obj.ToString() );
+		}
 
 		// returns the full window rect that isn't yet claimed by any GUILayout
 		public static Rect GetMaxRect()
@@ -78,42 +77,42 @@ namespace RelationsInspector.Backend
 			return scriptableObject;
 		}
 
-        public static string DrawEntitySelectSearchField( string searchString, RelationsInspectorAPI api )
-        {
-            // when the search string changes, select the entities with matching names
-            System.Action<string> onSearchStringChange = searchStr =>
-            {
-                if ( string.IsNullOrEmpty( searchStr ) )
-                    api.SelectEntityNodes( x => { return false; } );
-                else
-                    api.SelectEntityNodes( x =>
-                    {
-                        return ( x is Object ) ?
-                            ( x as Object ).name.ToLower().Contains( searchStr.ToLower() ) :
-                            false;
-                    } );
-            };
+		public static string DrawEntitySelectSearchField( string searchString, RelationsInspectorAPI api )
+		{
+			// when the search string changes, select the entities with matching names
+			System.Action<string> onSearchStringChange = searchStr =>
+			{
+				if ( string.IsNullOrEmpty( searchStr ) )
+					api.SelectEntityNodes( x => { return false; } );
+				else
+					api.SelectEntityNodes( x =>
+					{
+						return ( x is Object ) ?
+							( x as Object ).name.ToLower().Contains( searchStr.ToLower() ) :
+							false;
+					} );
+			};
 
-            return DrawSearchField( searchString, onSearchStringChange );
-        }
+			return DrawSearchField( searchString, onSearchStringChange );
+		}
 
-        public static string DrawSearchField( string searchString, System.Action<string> onChange)
-        {
-            EditorGUI.BeginChangeCheck();
-            searchString = EditorGUILayout.TextField( searchString, GUI.skin.FindStyle( "ToolbarSeachTextField" ) );
-            bool resetSearchString = GUILayout.Button( "", GUI.skin.FindStyle( "ToolbarSeachCancelButton" ) );
-            if ( EditorGUI.EndChangeCheck() )
-            {
-                if ( resetSearchString )
-                {
-                    searchString = string.Empty;
-                    GUI.FocusControl( null );
-                }
+		public static string DrawSearchField( string searchString, System.Action<string> onChange)
+		{
+			EditorGUI.BeginChangeCheck();
+			searchString = EditorGUILayout.TextField( searchString, GUI.skin.FindStyle( "ToolbarSeachTextField" ) );
+			bool resetSearchString = GUILayout.Button( "", GUI.skin.FindStyle( "ToolbarSeachCancelButton" ) );
+			if ( EditorGUI.EndChangeCheck() )
+			{
+				if ( resetSearchString )
+				{
+					searchString = string.Empty;
+					GUI.FocusControl( null );
+				}
 
-                onChange( searchString );
-            }
+				onChange( searchString );
+			}
 
-            return searchString;
-        }
+			return searchString;
+		}
 	}
 }
