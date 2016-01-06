@@ -109,7 +109,7 @@ namespace RelationsInspector.Backend
         public void DeleteEntity(T entity)
         {
             // first delete all relations involving the given entity
-            var relations = api.GetRelations( entity ).OfType<Relation<T, P>>();
+            var relations = api.FindRelations( entity ).OfType<Relation<T, P>>();
             foreach ( var rel in relations )
             {
                 DeleteRelation( rel.Source, rel.Target, rel.Tag );
