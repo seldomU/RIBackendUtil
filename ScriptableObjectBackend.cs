@@ -108,7 +108,16 @@ namespace RelationsInspector.Backend
         // entity context menu wants to remove the entity
         public void DeleteEntity(T entity)
         {
-            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(entity));
+            // first delete all relations involving the given entity
+            var relations = api.GetRelations( entity ).OfType<Relation<T, P>>();
+            foreach ( var rel in relations )
+            {
+                DeleteRelation( rel.Source, rel.Target, rel.Tag );
+                api.RemoveRelation( rel.Source, rel.Target, rel.Tag );
+            }
+
+            // remove the entity
+            AssetDatabase.DeleteAsset( AssetDatabase.GetAssetPath(entity) );
             AssetDatabase.SaveAssets();
             api.RemoveEntity(entity);
         }

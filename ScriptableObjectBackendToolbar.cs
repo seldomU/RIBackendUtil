@@ -29,6 +29,7 @@ namespace RelationsInspector.Backend
 		public ScriptableObjectBackendToolbar(RelationsInspectorAPI api)
 		{
 			this.api = api;
+            this.assetPath = string.Empty;
 		}
 
         public void SetAssetPath( string path )
