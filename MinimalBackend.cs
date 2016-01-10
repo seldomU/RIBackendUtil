@@ -97,7 +97,18 @@ namespace RelationsInspector.Backend
 		// we update Unity's object selection to match RI's
 		public virtual void OnEntitySelectionChange( T[] selection )
 		{
-			Selection.objects = selection.OfType<Object>().ToArray();
+			Selection.objects = selection
+				.OfType<Object>()
+				.Select( o => GetObjectRepresentative( o ) )
+				.ToArray();
+		}
+
+		Object GetObjectRepresentative( Object obj )
+		{
+			var asComp = obj as Component;
+			if ( asComp != null && asComp.gameObject != null )
+				return asComp.gameObject;
+			return obj;
 		}
 
 		// Event handler for when Unity's editor selection has changed
