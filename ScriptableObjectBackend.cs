@@ -10,9 +10,9 @@ namespace RelationsInspector.Backend
 		protected RelationsInspectorAPI api;
 		ScriptableObjectBackendToolbar<T> toolbar;
 
-		public virtual void Awake( RelationsInspectorAPI api )
+		public virtual void Awake( GetAPI getAPI )
 		{
-			this.api = api;
+			api = getAPI(1) as RelationsInspectorAPI;
 			toolbar = new ScriptableObjectBackendToolbar<T>( api );
 		}
 

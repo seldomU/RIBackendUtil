@@ -14,9 +14,9 @@ namespace RelationsInspector.Backend
 
 		#region graph construction
 
-		public virtual void Awake( RelationsInspectorAPI api )
+		public virtual void Awake( GetAPI getAPI )
 		{
-			this.api = api;
+			this.api = getAPI(1) as RelationsInspectorAPI;
 		}
 
 		// Init turns the inspection target objects into root entities of the graph
