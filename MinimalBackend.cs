@@ -97,8 +97,11 @@ namespace RelationsInspector.Backend
 		// we update Unity's object selection to match RI's
 		public virtual void OnEntitySelectionChange( T[] selection )
 		{
-			Selection.objects = selection
-				.OfType<Object>()
+			var selectedObjects = selection.OfType<Object>();
+			if ( !selectedObjects.Any() )
+				return;
+
+			Selection.objects = selectedObjects
 				.Select( o => GetObjectRepresentative( o ) )
 				.ToArray();
 		}
