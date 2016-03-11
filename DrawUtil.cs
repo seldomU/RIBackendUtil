@@ -130,5 +130,66 @@ namespace RelationsInspector.Backend
 
 			return Util.CenterRect(context.position, new Vector2(radius * 2, radius * 2));
 		}
+
+		// draw sprite. we can't draw it directly, instead we have to draw the correct region of its texture
+		public static void DrawTextureGUI( Vector2 origin, Sprite sprite, Vector2 size )
+		{
+			Rect spriteRect = new Rect
+				(
+				sprite.rect.x / sprite.texture.width,
+				sprite.rect.y / sprite.texture.height,
+				sprite.rect.width / sprite.texture.width,
+				sprite.rect.height / sprite.texture.height
+				);
+
+			Vector2 actualSize = size;
+
+			actualSize.y *= ( sprite.rect.height / sprite.rect.width );
+
+			var pos = new Rect
+				(
+				origin.x,
+				origin.y + ( size.y - actualSize.y ) / 2,
+				actualSize.x,
+				actualSize.y
+				);
+
+			GUI.DrawTextureWithTexCoords( pos, sprite.texture, spriteRect );
+		}
+
+		// draw the node widget (the icon sprite makes this complicated)
+		public static Rect DrawSpriteContent( string label, Sprite icon, EntityDrawContext drawContext )
+		{
+			var labelContent = new GUIContent( label );
+
+			// fall back to the default widget where there's no icon or the user wants cirles
+			if ( icon == null || drawContext.widgetType == EntityWidgetType.Circle )
+				return DrawUtil.DrawContent( labelContent, drawContext );
+
+			// calculate layout for icon and label, then draw them
+			var iconExtents = new Vector2( 25, 25 );
+			var padding = new Vector2( 4, 4 );
+			var contentExtents = drawContext.style.contentStyle.CalcSize( labelContent );
+			var widgetExtents = new Vector2( 3 * padding.x + iconExtents.x + contentExtents.x, 2 * padding.y + iconExtents.y );
+
+			var widgetRect = Util.CenterRect( drawContext.position, widgetExtents );
+			// draw the widget outer box
+			DrawUtil.DrawBoxAndBackground( widgetRect, drawContext );
+
+			// draw the icon
+			var iconOrigin = widgetRect.GetOrigin() + padding;
+			DrawTextureGUI( iconOrigin, icon, iconExtents );
+
+			// draw the label
+			var contentRectOrigin = new Vector2
+				(
+				widgetRect.xMin + 2 * padding.x + iconExtents.x,
+				widgetRect.yMin + ( widgetExtents.y - contentExtents.y ) / 2 );
+
+			var contentRect = new Rect( contentRectOrigin.x, contentRectOrigin.y, contentExtents.x, contentExtents.y );
+			GUI.Label( contentRect, labelContent, drawContext.style.contentStyle );
+
+			return widgetRect;
+		}
 	}
 }
