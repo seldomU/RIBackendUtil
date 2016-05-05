@@ -7,8 +7,6 @@ namespace RelationsInspector.Backend
 {
 	public static class RandomColor
 	{
-		static float lightFactor = 0.3f;    // how much to lighten up the default R,G,B colors
-
 		// base Color palettes
 		static Color[] LightPalette =
 			new Color[]
